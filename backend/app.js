@@ -195,13 +195,7 @@ app.post("/api/pdf", async (req, res) => {
 });
 
 app.post("/api/pdf/schedule", async (req, res) => {
-  const minutes = req.body.minutes;
-  const hours = req.body.hours;
-  const dayOfMonth = req.body.dayOfMonth;
-  const month = req.body.month;
-  const dayOfWeek = req.body.dayOfWeek;
-  const time =
-    minutes + " " + hours + " " + dayOfMonth + " " + month + " " + dayOfWeek;
+  const time = req.body.time;
   const job = schedule.scheduleJob(time, async () => {
     const data = await getRequiredData(req.body.context);
     const html = generateHTML(data);
@@ -236,9 +230,7 @@ app.post("/api/pdf/schedule", async (req, res) => {
 
   res.send("Job scheduled");
   job.on("scheduled", () => {
-    console.log(
-      `Scheduling for ${minutes}:${hours}, on the ${dayOfMonth}/${month}`
-    );
+    console.log(`Scheduling for ${time}`);
   });
 });
 
