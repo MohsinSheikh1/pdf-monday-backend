@@ -3,6 +3,7 @@ const puppeteer = require("puppeteer");
 const schedule = require("node-schedule");
 const monday = require("monday-sdk-js")();
 const nodemailer = require("nodemailer");
+const User = require("./models/User");
 
 monday.setToken(
   "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjI4MTk4Mjg4NywiYWFpIjoxMSwidWlkIjo0ODU5NTMzMiwiaWFkIjoiMjAyMy0wOS0xNFQyMTo0MDo0MS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTg3MTUzNzYsInJnbiI6ImV1YzEifQ.pmVheIJ_ordb6DX7Zzj3_5ztoe7tWM3dMax0nmo-DTM"
@@ -182,6 +183,29 @@ async function generatePDF(html) {
 
   return pdf;
 }
+
+app.post("/api/user/:id", async (req, res) => {
+  // find user if user is not found send user not found if found send api_key
+  const id = req.params.id;
+  const user = await User.findOne({ id: id });
+  if (user) {
+    res.send(user.apiKey);
+  } else {
+    res.send("User not found");
+  }
+});
+
+app.post("/api/user", async (req, res) => {
+  // create user if user is created send api_key
+  const id = req.body.id;
+  const apiKey = req.body.apiKey;
+  const user = new User({
+    id: id,
+    apiKey: apiKey
+  });
+  await user.save();
+  res.send(apiKey);
+});
 
 app.post("/api/pdf", async (req, res) => {
   const includeSubitems = Boolean(req.query.includeSubitems);
