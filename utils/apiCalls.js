@@ -23,24 +23,28 @@ async function getRequiredData(context, includeSubitems, includeUpdates) {
              
                 groups(ids: ["new_group", "${context.groupId}"]) {
                 title
-                items {
-                  id
-                  name
-                  column_values {
-                    value
-                    type
+                  items {
                     id
-                    text
-                  }
+                    name
+                    column_values {
+                      value
+                      type
+                      id
+                      text
+                    }
+                  
                 }
               }
             }
           }`
-    )
+    ),
+    { apiVersion: "2023-07" }
   );
+  console.log(data);
 
   data = JSON.parse(data);
   data = data.data;
+  console.dir(data, { depth: null });
 
   if (includeSubitems) {
     const query = JSON.stringify(
@@ -74,7 +78,8 @@ async function getRequiredData(context, includeSubitems, includeUpdates) {
                   }
                 }
             }
-          }`
+          }`,
+        { apiVersion: "2023-10" }
       )
     );
 
@@ -119,7 +124,6 @@ async function getRequiredData(context, includeSubitems, includeUpdates) {
 
   //Columns -- [{type, title, id, settings_str}]
   const columns = data.boards[0].columns;
-  console.dir(columns);
 
   //Groups -- ['Group 1 name', 'Group 2 name']
   const groups = data.boards[0].groups.map((group) => group.title);

@@ -11,7 +11,6 @@ exports.createPDF = async (req, res) => {
   const { boardName, columns, groups, items, statusColumns } =
     await getRequiredData(req.body, includeSubitems, includeUpdates);
   const html = generateHTML(boardName, columns, groups, items, statusColumns);
-  console.log(html);
 
   const pdf = await generatePDF(html);
   res.contentType("application/pdf");
