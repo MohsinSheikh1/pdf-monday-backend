@@ -3,7 +3,6 @@ function generateHTML(
   columns,
   groups,
   groupwise_items,
-  groupwise_item_column_values,
   statusColumns
 ) {
   const boardHtml = `<h1>${boardName}</h1>`;
@@ -20,7 +19,7 @@ function generateHTML(
 
   const itemsHtml = groupwise_items.map((group) => {
     return group.map(({ name, columnValues, subitems }) => {
-      return `<td>${name}</td>${columnValues
+      return `<tr><td>${name}</td>${columnValues
         .map(({ text, type, id }) => {
           if (type === "color") {
             const statusColumn = statusColumns.find(
@@ -37,9 +36,9 @@ function generateHTML(
           }
           return `<td>${text}</td>`;
         })
-        .join("")}${
+        .join("")}</tr>${
         subitems.subitemsName.length > 0
-          ? `<tr><th>Subitems</th>${subitemsColumnsHtml.join(
+          ? `<tr><th style="background-color: white; opacity: 0.5">Subitems</th>${subitemsColumnsHtml.join(
               ""
             )}</tr>${subitems.subitemsName
               .map((name, i) => {
@@ -60,7 +59,9 @@ function generateHTML(
                         statusColumn.labelColors[labelIndex]?.border ||
                         "#797E93";
 
-                      return `<td style="background-color: ${labelColorBackground}; border: 1px solid ${labelColorBorder};">${text}</td>`;
+                      return `<td style="background-color: ${labelColorBackground}; border: 1px solid ${labelColorBorder};">${
+                        text ? text : ""
+                      }</td>`;
                     }
                     return `<td>${text}</td>`;
                   })
@@ -71,37 +72,44 @@ function generateHTML(
       }`;
     });
   });
-  // console.dir(itemsHtml, { depth: null });
-
-  // console.dir(boardHtml, { depth: null });
-  // console.dir(groupsHtml, { depth: null });
-  // console.dir(columnsHtml, { depth: null });
-  // console.dir(itemsHtml, { depth: null });
-  // console.dir(columnValuesHtml, { depth: null });
-  // console.dir(itemsHtml, { depth: null });
 
   const html = `
         <html>
           <head>
             <style>
-            h1, h2 {
-              text-align: center;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-            }
-            h, td {
-              border: 1px solid black;
-              text-align: center;
-            }
-            th {
-              background-color: #f2f2f2;
-              /*                    padding: .5rem;*/
-              font-weight: bold;
-              color: black;
-            }
-            </style>
+            * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+    
+          body {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 20px;
+          }
+          h1,
+          h2 {
+            text-align: left;
+            margin: 10px 0px 10px 0px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th,
+          td {
+            border: 1px solid black;
+            text-align: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+          }
+          th {
+            background-color: #f2f2f2;
+            /*                    padding: .5rem;*/
+            font-weight: bold;
+            color: black;
+          }
+          </style>
           </head>
     
           <body>
@@ -115,7 +123,7 @@ function generateHTML(
                   </tr>
                   ${itemsHtml[i]
                     .map((item) => {
-                      return `<tr>${item}</tr>`;
+                      return `${item}`;
                     })
                     .join("")}
                 </table>`;

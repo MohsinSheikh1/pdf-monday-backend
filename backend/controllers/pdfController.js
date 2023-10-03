@@ -8,16 +8,10 @@ exports.createPDF = async (req, res) => {
   const includeSubitems = req.query.includeSubitems === "true" ? true : false;
   const includeUpdates = req.query.includeUpdates === "true" ? true : false;
 
-  const { boardName, columns, groups, items, column_values, statusColumns } =
+  const { boardName, columns, groups, items, statusColumns } =
     await getRequiredData(req.body, includeSubitems, includeUpdates);
-  const html = generateHTML(
-    boardName,
-    columns,
-    groups,
-    items,
-    column_values,
-    statusColumns
-  );
+  const html = generateHTML(boardName, columns, groups, items, statusColumns);
+  console.log(html);
 
   const pdf = await generatePDF(html);
   res.contentType("application/pdf");
@@ -29,16 +23,9 @@ exports.schedulePDF = async (req, res) => {
   schedule.scheduleJob(time, async () => {
     const includeSubitems = req.query.includeSubitems === "true" ? true : false;
     const includeUpdates = req.query.includeUpdates === "true" ? true : false;
-    const { boardName, columns, groups, items, column_values, statusColumns } =
+    const { boardName, columns, groups, items, statusColumns } =
       await getRequiredData(req.body.context, includeSubitems, includeUpdates);
-    const html = generateHTML(
-      boardName,
-      columns,
-      groups,
-      items,
-      column_values,
-      statusColumns
-    );
+    const html = generateHTML(boardName, columns, groups, items, statusColumns);
 
     const pdf = await generatePDF(html);
     sendEmail(pdf);

@@ -146,20 +146,6 @@ async function getRequiredData(context, includeSubitems, includeUpdates) {
     });
   });
 
-  //Column Values of items -- [ [ [ {id, text, value, type}, {....} ], [...] ], [ [...], [...] ] ]
-  const column_values = data.boards[0].groups.map((group) =>
-    group.items.map((item) =>
-      item.column_values.map((col_val) => {
-        return {
-          id: col_val.id,
-          text: col_val.text,
-          value: col_val.value,
-          type: col_val.type,
-        };
-      })
-    )
-  );
-
   const statusColumns = getStatusColumnsData(columns);
 
   // console.log("-----Columns------------");
@@ -176,7 +162,6 @@ async function getRequiredData(context, includeSubitems, includeUpdates) {
     columns,
     groups,
     items,
-    column_values,
     statusColumns,
   };
 }
